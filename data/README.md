@@ -1,0 +1,1 @@
+﻿# Synthetic healthcare certification data
