@@ -1,0 +1,164 @@
+{
+  "_metadata": {
+    "description": "Synthetic healthcare certification catalog for MedLearn AI. Powers the Fabric IQ semantic layer.",
+    "version": "0.1.0",
+    "synthetic_data_only": true,
+    "note": "All certification details are fictional and for demonstration only. Real certification programs have their own requirements, scoring rules, and accrediting bodies."
+  },
+  "certifications": [
+    {
+      "id": "CCRN-2024",
+      "display_name": "Critical Care Registered Nurse Certification",
+      "category": "Clinical Specialty",
+      "applies_to_roles": ["RN_CCU"],
+      "skills": [
+        "Hemodynamic Monitoring",
+        "Mechanical Ventilation Management",
+        "Sepsis Recognition and Response",
+        "Cardiac Rhythm Interpretation",
+        "Pharmacology in Critical Care"
+      ],
+      "recommended_study_hours": 30,
+      "minimum_passing_score": 75,
+      "renewal_cycle_years": 3,
+      "prerequisites": ["RN-BASE-2023", "BLS-2024"],
+      "difficulty_level": "Advanced",
+      "regulatory_requirement": false,
+      "synthetic_data": true
+    },
+    {
+      "id": "BLS-2024",
+      "display_name": "Basic Life Support",
+      "category": "Emergency Response",
+      "applies_to_roles": ["RN_CCU", "PHARM_HOSP", "MLT_LAB"],
+      "skills": [
+        "Adult CPR",
+        "Pediatric CPR",
+        "Automated External Defibrillator Use",
+        "Choking Response"
+      ],
+      "recommended_study_hours": 6,
+      "minimum_passing_score": 80,
+      "renewal_cycle_years": 2,
+      "prerequisites": [],
+      "difficulty_level": "Beginner",
+      "regulatory_requirement": true,
+      "synthetic_data": true
+    },
+    {
+      "id": "ACLS-2024",
+      "display_name": "Advanced Cardiac Life Support",
+      "category": "Emergency Response",
+      "applies_to_roles": ["RN_CCU"],
+      "skills": [
+        "Advanced Airway Management",
+        "Cardiac Arrest Algorithms",
+        "Post-Resuscitation Care",
+        "Team Dynamics in Emergencies"
+      ],
+      "recommended_study_hours": 12,
+      "minimum_passing_score": 80,
+      "renewal_cycle_years": 2,
+      "prerequisites": ["BLS-2024"],
+      "difficulty_level": "Intermediate",
+      "regulatory_requirement": true,
+      "synthetic_data": true
+    },
+    {
+      "id": "BCPS-2024",
+      "display_name": "Board Certified Pharmacotherapy Specialist",
+      "category": "Clinical Specialty",
+      "applies_to_roles": ["PHARM_HOSP"],
+      "skills": [
+        "Pharmacokinetics and Pharmacodynamics",
+        "Drug Interaction Analysis",
+        "Therapeutic Drug Monitoring",
+        "Anticoagulation Management",
+        "Antimicrobial Stewardship"
+      ],
+      "recommended_study_hours": 40,
+      "minimum_passing_score": 75,
+      "renewal_cycle_years": 7,
+      "prerequisites": ["PHARM-D-2024"],
+      "difficulty_level": "Advanced",
+      "regulatory_requirement": false,
+      "synthetic_data": true
+    },
+    {
+      "id": "MLT-ASCP-2026",
+      "display_name": "Medical Laboratory Technician Recertification",
+      "category": "Clinical Specialty",
+      "applies_to_roles": ["MLT_LAB"],
+      "skills": [
+        "Clinical Chemistry Analysis",
+        "Hematology Procedures",
+        "Microbiology Culture and Sensitivity",
+        "Quality Control Standards"
+      ],
+      "recommended_study_hours": 25,
+      "minimum_passing_score": 70,
+      "renewal_cycle_years": 3,
+      "prerequisites": ["MLT-ASCP-2023"],
+      "difficulty_level": "Intermediate",
+      "regulatory_requirement": false,
+      "synthetic_data": true
+    },
+    {
+      "id": "HIPAA-ANNUAL-2026",
+      "display_name": "HIPAA Privacy and Security Annual Training",
+      "category": "Compliance",
+      "applies_to_roles": ["RN_CCU", "PHARM_HOSP", "MLT_LAB"],
+      "skills": [
+        "Protected Health Information Handling",
+        "Breach Identification and Reporting",
+        "Minimum Necessary Standard",
+        "Patient Privacy Rights"
+      ],
+      "recommended_study_hours": 4,
+      "minimum_passing_score": 80,
+      "renewal_cycle_years": 1,
+      "prerequisites": [],
+      "difficulty_level": "Beginner",
+      "regulatory_requirement": true,
+      "synthetic_data": true
+    },
+    {
+      "id": "INFECTION-CTRL-2026",
+      "display_name": "Infection Prevention and Control Refresher",
+      "category": "Compliance",
+      "applies_to_roles": ["RN_CCU", "PHARM_HOSP", "MLT_LAB"],
+      "skills": [
+        "Hand Hygiene Protocols",
+        "Personal Protective Equipment Use",
+        "Isolation Precautions",
+        "Sharps and Specimen Handling"
+      ],
+      "recommended_study_hours": 5,
+      "minimum_passing_score": 80,
+      "renewal_cycle_years": 1,
+      "prerequisites": [],
+      "difficulty_level": "Beginner",
+      "regulatory_requirement": true,
+      "synthetic_data": true
+    },
+    {
+      "id": "CLIA-COMPLIANCE-2026",
+      "display_name": "CLIA Laboratory Compliance",
+      "category": "Compliance",
+      "applies_to_roles": ["MLT_LAB"],
+      "skills": [
+        "Specimen Integrity Standards",
+        "Proficiency Testing Requirements",
+        "Quality Assurance Documentation",
+        "Regulatory Inspection Readiness"
+      ],
+      "recommended_study_hours": 8,
+      "minimum_passing_score": 80,
+      "renewal_cycle_years": 1,
+      "prerequisites": [],
+      "difficulty_level": "Intermediate",
+      "regulatory_requirement": true,
+      "synthetic_data": true
+    }
+  ]
+}

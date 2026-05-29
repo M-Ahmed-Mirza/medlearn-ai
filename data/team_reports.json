@@ -1,0 +1,162 @@
+{
+  "_metadata": {
+    "description": "Synthetic team-level aggregate data for MedLearn AI Manager Insights Agent. Combines Work IQ + Fabric IQ signals.",
+    "version": "0.1.0",
+    "synthetic_data_only": true,
+    "note": "Manager Insights Agent uses this to surface risk patterns without exposing individual PII. All numbers are fabricated."
+  },
+  "team_reports": [
+    {
+      "team_id": "TEAM-ICU-NIGHT",
+      "team_name": "Synthetic ICU Night Team",
+      "department_id": "DEPT-ICU-A",
+      "team_size": 8,
+      "total_pending_certifications": 12,
+      "certifications_due_within_30_days": 3,
+      "certifications_due_within_90_days": 7,
+      "team_average_practice_score": 71,
+      "team_average_study_hours_quarter": 16,
+      "team_pass_rate": 65,
+      "regulatory_compliance_rate": 88,
+      "average_workload_score": 75,
+      "burnout_risk_summary": {
+        "high": 2,
+        "moderate": 4,
+        "low": 2
+      },
+      "key_insight": "Night shift team shows lower study completion compared to day shift; recommend protected learning windows during post-shift recovery hours.",
+      "synthetic_data": true
+    },
+    {
+      "team_id": "TEAM-ICU-DAY",
+      "team_name": "Synthetic ICU Day Team",
+      "department_id": "DEPT-ICU-A",
+      "team_size": 10,
+      "total_pending_certifications": 9,
+      "certifications_due_within_30_days": 2,
+      "certifications_due_within_90_days": 5,
+      "team_average_practice_score": 79,
+      "team_average_study_hours_quarter": 22,
+      "team_pass_rate": 82,
+      "regulatory_compliance_rate": 95,
+      "average_workload_score": 68,
+      "burnout_risk_summary": {
+        "high": 1,
+        "moderate": 3,
+        "low": 6
+      },
+      "key_insight": "Day shift team performs well overall; HIPAA and Infection Control renewals are on schedule.",
+      "synthetic_data": true
+    },
+    {
+      "team_id": "TEAM-PHARM-A",
+      "team_name": "Synthetic Pharmacy Team A",
+      "department_id": "DEPT-PHARMACY",
+      "team_size": 6,
+      "total_pending_certifications": 8,
+      "certifications_due_within_30_days": 1,
+      "certifications_due_within_90_days": 4,
+      "team_average_practice_score": 72,
+      "team_average_study_hours_quarter": 18,
+      "team_pass_rate": 70,
+      "regulatory_compliance_rate": 92,
+      "average_workload_score": 82,
+      "burnout_risk_summary": {
+        "high": 3,
+        "moderate": 2,
+        "low": 1
+      },
+      "key_insight": "Pharmacy team has high meeting load (avg 22 hours/week) eating into study time; suggest restructuring meeting cadence to protect learning windows.",
+      "synthetic_data": true
+    },
+    {
+      "team_id": "TEAM-PHARM-B",
+      "team_name": "Synthetic Pharmacy Team B",
+      "department_id": "DEPT-PHARMACY",
+      "team_size": 5,
+      "total_pending_certifications": 6,
+      "certifications_due_within_30_days": 0,
+      "certifications_due_within_90_days": 3,
+      "team_average_practice_score": 68,
+      "team_average_study_hours_quarter": 14,
+      "team_pass_rate": 60,
+      "regulatory_compliance_rate": 85,
+      "average_workload_score": 72,
+      "burnout_risk_summary": {
+        "high": 1,
+        "moderate": 2,
+        "low": 2
+      },
+      "key_insight": "BCPS exam preparation lagging behind plan; team would benefit from a structured 12-week study group.",
+      "synthetic_data": true
+    },
+    {
+      "team_id": "TEAM-LAB-CHEM",
+      "team_name": "Synthetic Lab Chemistry Team",
+      "department_id": "DEPT-LAB",
+      "team_size": 7,
+      "total_pending_certifications": 5,
+      "certifications_due_within_30_days": 1,
+      "certifications_due_within_90_days": 3,
+      "team_average_practice_score": 76,
+      "team_average_study_hours_quarter": 20,
+      "team_pass_rate": 78,
+      "regulatory_compliance_rate": 96,
+      "average_workload_score": 64,
+      "burnout_risk_summary": {
+        "high": 0,
+        "moderate": 2,
+        "low": 5
+      },
+      "key_insight": "Lab Chemistry team is best-performing across all metrics; can serve as a peer-mentoring resource for other teams.",
+      "synthetic_data": true
+    },
+    {
+      "team_id": "TEAM-LAB-MICRO",
+      "team_name": "Synthetic Lab Microbiology Team",
+      "department_id": "DEPT-LAB",
+      "team_size": 6,
+      "total_pending_certifications": 7,
+      "certifications_due_within_30_days": 2,
+      "certifications_due_within_90_days": 5,
+      "team_average_practice_score": 70,
+      "team_average_study_hours_quarter": 15,
+      "team_pass_rate": 67,
+      "regulatory_compliance_rate": 90,
+      "average_workload_score": 70,
+      "burnout_risk_summary": {
+        "high": 1,
+        "moderate": 3,
+        "low": 2
+      },
+      "key_insight": "Microbiology team has compliance renewals concentrated in the next 30 days; coordinate scheduling to prevent operational gaps.",
+      "synthetic_data": true
+    }
+  ],
+  "department_rollup": [
+    {
+      "department_id": "DEPT-ICU-A",
+      "department_name": "Synthetic Intensive Care Unit A",
+      "total_staff": 18,
+      "overall_compliance_rate": 91,
+      "overall_certification_completion_rate": 75,
+      "synthetic_data": true
+    },
+    {
+      "department_id": "DEPT-PHARMACY",
+      "department_name": "Synthetic Hospital Pharmacy",
+      "total_staff": 11,
+      "overall_compliance_rate": 88,
+      "overall_certification_completion_rate": 65,
+      "synthetic_data": true
+    },
+    {
+      "department_id": "DEPT-LAB",
+      "department_name": "Synthetic Clinical Laboratory",
+      "total_staff": 13,
+      "overall_compliance_rate": 93,
+      "overall_certification_completion_rate": 72,
+      "synthetic_data": true
+    }
+  ]
+}
