@@ -17,7 +17,7 @@ from typing import List
 
 from pydantic import BaseModel, Field, field_validator
 
-from agents.models.enums import CertificationCategory, DifficultyLevel, RoleCode
+from medlearn.models.enums import CertificationCategory, DifficultyLevel, RoleCode
 
 
 class Certification(BaseModel):

@@ -15,7 +15,7 @@ from typing import List
 
 from pydantic import BaseModel, Field, field_validator
 
-from agents.models.enums import AssessmentOutcome, RoleCode
+from medlearn.models.enums import AssessmentOutcome, RoleCode
 
 
 class Learner(BaseModel):

@@ -11,7 +11,7 @@ Run with:
     python -m tests.test_data_loading
 """
 
-from agents.data_loader import (
+from medlearn.data_loader import (
     load_certifications,
     load_learners,
     load_team_reports,

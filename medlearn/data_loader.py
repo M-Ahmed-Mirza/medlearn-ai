@@ -6,7 +6,7 @@ Pydantic models. Every agent should use these helpers instead of reading
 JSON directly — that way validation happens once and consistently.
 
 Usage:
-    from agents.data_loader import load_learners, load_certifications
+    from medlearn.data_loader import load_learners, load_certifications
 
     learners = load_learners()           # Returns LearnerCatalog
     certs = load_certifications()        # Returns CertificationCatalog
@@ -16,7 +16,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 
-from agents.models import (
+from medlearn.models import (
     CertificationCatalog,
     LearnerCatalog,
     TeamReportCatalog,

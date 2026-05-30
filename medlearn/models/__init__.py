@@ -4,12 +4,17 @@ MedLearn AI - Data Models
 Pydantic schemas that mirror data/*.json files and enforce synthetic-data rules.
 
 Public API:
-    from agents.models import Learner, Certification, WorkSignal, TeamReport
-    from agents.models import RoleCode, DifficultyLevel, BurnoutRisk
+    from medlearn.models import Learner, Certification, WorkSignal, TeamReport
+    from medlearn.models import RoleCode, DifficultyLevel, BurnoutRisk
 """
 
-from agents.models.certification import Certification, CertificationCatalog
-from agents.models.enums import (
+from medlearn.models.agent_response import (
+    AlternativeConsidered,
+    Citation,
+    CuratorRecommendation,
+)
+from medlearn.models.certification import Certification, CertificationCatalog
+from medlearn.models.enums import (
     AssessmentOutcome,
     BurnoutRisk,
     CertificationCategory,
@@ -17,14 +22,14 @@ from agents.models.enums import (
     ReadinessLevel,
     RoleCode,
 )
-from agents.models.learner import Learner, LearnerCatalog
-from agents.models.team_report import (
+from medlearn.models.learner import Learner, LearnerCatalog
+from medlearn.models.team_report import (
     BurnoutRiskSummary,
     DepartmentRollup,
     TeamReport,
     TeamReportCatalog,
 )
-from agents.models.work_signal import WorkSignal, WorkSignalCatalog
+from medlearn.models.work_signal import WorkSignal, WorkSignalCatalog
 
 __all__ = [
     # Core models
@@ -38,6 +43,10 @@ __all__ = [
     "TeamReportCatalog",
     "DepartmentRollup",
     "BurnoutRiskSummary",
+    # Agent I/O schemas
+    "CuratorRecommendation",
+    "Citation",
+    "AlternativeConsidered",
     # Enums
     "RoleCode",
     "DifficultyLevel",
