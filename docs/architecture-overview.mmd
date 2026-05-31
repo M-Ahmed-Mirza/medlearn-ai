@@ -1,0 +1,50 @@
+flowchart TB
+    User([👤 Clinical Manager<br/>or Demo User])
+
+    subgraph DataLayer["🗄️ Synthetic Data Layer"]
+        Learners["learners.json<br/>(6 synthetic clinical staff)"]
+        Certs["certifications.json<br/>(8 certification types)"]
+        Signals["work_signals.json<br/>(shifts, burnout, workload)"]
+        Teams["team_reports.json<br/>(aggregate team metrics)"]
+        Grounding["📚 Grounding docs<br/>(clinical, workload, CME)"]
+    end
+
+    Orchestrator{{"🏗️ Orchestrator<br/>(coordinates all 6 agents,<br/>routes escalations,<br/>triggers Critic regeneration)"}}
+
+    subgraph Agents["🤖 Six Specialized Agents"]
+        Curator["🎓 Learning Path Curator<br/>recommends next cert with<br/>citations + alternatives"]
+        StudyPlan["📅 Study Plan Generator<br/>builds shift-aware<br/>week-by-week schedule"]
+        Engagement["🔔 Engagement Agent<br/>SEND / RESCHEDULE / REFUSE_ESCALATE"]
+        Assessment["📝 Assessment Agent<br/>generates practice questions<br/>+ predicts readiness"]
+        Manager["📊 Manager Insights<br/>team dashboard<br/>(receives escalations)"]
+        Critic["🧪 Critic Agent<br/>reviews ALL outputs<br/>APPROVED / NEEDS_REVISION / REJECTED"]
+    end
+
+    Foundry["☁️ Microsoft Foundry<br/>GPT-4o with structured outputs<br/>(Pydantic-typed Pipelines)"]
+
+    User -->|picks learner + cert| Orchestrator
+    DataLayer -.->|reads context| Orchestrator
+    Orchestrator -->|invokes| Curator
+    Orchestrator -->|invokes| StudyPlan
+    Orchestrator -->|invokes| Engagement
+    Orchestrator -->|invokes| Assessment
+    Orchestrator -.->|invokes if escalation| Manager
+    Curator -.->|output reviewed by| Critic
+    StudyPlan -.->|output reviewed by| Critic
+    Engagement -.->|output reviewed by| Critic
+    Assessment -.->|output reviewed by| Critic
+    Manager -.->|output reviewed by| Critic
+    Agents -->|API calls| Foundry
+    Orchestrator -->|returns| User
+
+    classDef agentStyle fill:#1f6feb,stroke:#58a6ff,color:#fff
+    classDef criticStyle fill:#bf3989,stroke:#ff7eb6,color:#fff
+    classDef dataStyle fill:#3a3a4f,stroke:#8b949e,color:#fff
+    classDef orchStyle fill:#1a7f37,stroke:#3fb950,color:#fff
+    classDef userStyle fill:#9e6a03,stroke:#d29922,color:#fff
+
+    class Curator,StudyPlan,Engagement,Assessment,Manager agentStyle
+    class Critic criticStyle
+    class Learners,Certs,Signals,Teams,Grounding dataStyle
+    class Orchestrator orchStyle
+    class User userStyle
