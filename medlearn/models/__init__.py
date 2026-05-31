@@ -10,9 +10,11 @@ Public API:
 
 from medlearn.models.agent_response import (
     AlternativeConsidered,
+    AssessmentResult,
     Citation,
     CuratorRecommendation,
     EngagementDecision,
+    PracticeQuestion,
     StudyPlan,
     StudyWeek,
 )
@@ -53,6 +55,8 @@ __all__ = [
     "StudyPlan",
     "StudyWeek",
     "EngagementDecision",
+    "AssessmentResult",
+    "PracticeQuestion",
     # Enums
     "RoleCode",
     "DifficultyLevel",

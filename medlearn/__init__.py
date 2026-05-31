@@ -17,6 +17,7 @@ from medlearn.data_loader import (
     load_team_reports,
     load_work_signals,
 )
+from medlearn.assessment_agent import AssessmentAgent
 from medlearn.engagement_agent import EngagementAgent
 from medlearn.grounding import GroundingContext, load_grounding_context
 from medlearn.learning_path_curator import LearningPathCurator
@@ -36,4 +37,5 @@ __all__ = [
     "LearningPathCurator",
     "StudyPlanGenerator",
     "EngagementAgent",
+    "AssessmentAgent",
 ]
