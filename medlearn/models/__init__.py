@@ -12,6 +12,7 @@ from medlearn.models.agent_response import (
     AlternativeConsidered,
     Citation,
     CuratorRecommendation,
+    EngagementDecision,
     StudyPlan,
     StudyWeek,
 )
@@ -51,6 +52,7 @@ __all__ = [
     "AlternativeConsidered",
     "StudyPlan",
     "StudyWeek",
+    "EngagementDecision",
     # Enums
     "RoleCode",
     "DifficultyLevel",

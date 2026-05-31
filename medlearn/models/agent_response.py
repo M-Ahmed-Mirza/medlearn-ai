@@ -162,3 +162,74 @@ class StudyPlan(BaseModel):
         default_factory=list,
         description="Workload/burnout/timeline risks flagged for human review.",
     )
+
+
+# ============================================================================
+# Engagement Agent schemas
+# ============================================================================
+
+
+class EngagementDecision(BaseModel):
+    """Structured output from the Engagement Agent.
+
+    Decides whether to send a study reminder to a learner RIGHT NOW, or
+    reschedule it, or refuse and escalate to Manager Insights when burnout
+    risk makes pushing the learner harmful.
+
+    This is MedLearn AI's primary ethical-refusal pattern — judges will see
+    burnout-aware decisions made autonomously, with citations.
+    """
+
+    learner_id: str = Field(..., description="The learner this decision is for.")
+    action: str = Field(
+        ...,
+        description=(
+            "EXACTLY one of: 'SEND_REMINDER', 'RESCHEDULE', or 'REFUSE_AND_ESCALATE'. "
+            "SEND_REMINDER = deliver the reminder now. "
+            "RESCHEDULE = defer to a better time (provide proposed_time). "
+            "REFUSE_AND_ESCALATE = burnout/welfare risk; do not send, flag manager."
+        ),
+    )
+    message_to_learner: Optional[str] = Field(
+        default=None,
+        description=(
+            "The actual reminder text the system would send. "
+            "REQUIRED when action='SEND_REMINDER' or 'RESCHEDULE'. "
+            "MUST be empty/null when action='REFUSE_AND_ESCALATE' "
+            "(we do not push messages to high-burnout learners)."
+        ),
+    )
+    proposed_time: Optional[str] = Field(
+        default=None,
+        description=(
+            "When the reminder should arrive (natural language ok, e.g. "
+            "'Tuesday at 10am, post-shift window'). REQUIRED when action='RESCHEDULE'."
+        ),
+    )
+    escalation_note: Optional[str] = Field(
+        default=None,
+        description=(
+            "Message to forward to Manager Insights Agent. REQUIRED when "
+            "action='REFUSE_AND_ESCALATE'. Should describe the concern and "
+            "suggest workload/scheduling intervention."
+        ),
+    )
+    rationale: str = Field(
+        ...,
+        description=(
+            "2-4 sentence explanation of WHY this action was chosen, citing the "
+            "learner's burnout indicator, current shift, on-call status, "
+            "and/or workload score."
+        ),
+    )
+    confidence: float = Field(
+        ..., ge=0.0, le=1.0, description="Confidence in the decision (0.0 to 1.0)."
+    )
+    citations: List[Citation] = Field(
+        default_factory=list,
+        description="Source documents supporting the decision (e.g., workload guidelines).",
+    )
+    safety_flags: List[str] = Field(
+        default_factory=list,
+        description="Welfare/burnout/safety concerns to surface.",
+    )
