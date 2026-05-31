@@ -12,6 +12,8 @@ from medlearn.models.agent_response import (
     AlternativeConsidered,
     Citation,
     CuratorRecommendation,
+    StudyPlan,
+    StudyWeek,
 )
 from medlearn.models.certification import Certification, CertificationCatalog
 from medlearn.models.enums import (
@@ -47,6 +49,8 @@ __all__ = [
     "CuratorRecommendation",
     "Citation",
     "AlternativeConsidered",
+    "StudyPlan",
+    "StudyWeek",
     # Enums
     "RoleCode",
     "DifficultyLevel",

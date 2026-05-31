@@ -19,6 +19,7 @@ from medlearn.data_loader import (
 )
 from medlearn.grounding import GroundingContext, load_grounding_context
 from medlearn.learning_path_curator import LearningPathCurator
+from medlearn.study_plan_generator import StudyPlanGenerator
 
 __all__ = [
     # Data loading
@@ -32,4 +33,5 @@ __all__ = [
     "load_grounding_context",
     # Agents
     "LearningPathCurator",
+    "StudyPlanGenerator",
 ]
