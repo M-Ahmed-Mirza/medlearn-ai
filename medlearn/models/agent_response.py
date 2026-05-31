@@ -514,3 +514,72 @@ class CriticVerdict(BaseModel):
         le=1.0,
         description="The Critic's confidence in its own verdict.",
     )
+
+
+# ============================================================================
+# Orchestrator output schema
+# ============================================================================
+
+
+class CriticReviewSummary(BaseModel):
+    """A condensed Critic verdict attached to each pipeline stage."""
+
+    verdict: str = Field(..., description="APPROVED / NEEDS_REVISION / REJECTED.")
+    quality_score: float = Field(..., ge=0.0, le=1.0)
+    regenerated: bool = Field(
+        default=False, description="Whether the upstream agent was regenerated."
+    )
+
+
+class LearnerJourneyReport(BaseModel):
+    """Final aggregated output from the full MedLearn AI pipeline.
+
+    Contains the outputs from all relevant agents for a single learner journey,
+    plus Critic review summaries for each stage. This is the demo-ready
+    artifact that proves all 6 agents work together.
+    """
+
+    learner_id: str = Field(..., description="The learner this journey is for.")
+    target_certification_id: str = Field(
+        ..., description="The cert recommended/built for in this journey."
+    )
+
+    # Stage 1: Curator
+    curator_recommendation: CuratorRecommendation
+    curator_review: CriticReviewSummary
+
+    # Stage 2: Study Plan
+    study_plan: StudyPlan
+    study_plan_review: CriticReviewSummary
+
+    # Stage 3: Engagement
+    engagement_decision: EngagementDecision
+    engagement_review: CriticReviewSummary
+
+    # Stage 4: Assessment
+    assessment_result: AssessmentResult
+    assessment_review: CriticReviewSummary
+
+    # Stage 5: Manager Insights (only if escalation fired)
+    manager_insight: Optional[ManagerInsight] = Field(
+        default=None,
+        description="Populated only if Engagement Agent triggered an escalation.",
+    )
+    manager_review: Optional[CriticReviewSummary] = Field(
+        default=None, description="Critic review of manager insight (when present)."
+    )
+
+    # Pipeline-level metadata
+    escalation_triggered: bool = Field(
+        default=False,
+        description="True if Engagement Agent's REFUSE_AND_ESCALATE fired.",
+    )
+    total_critic_regenerations: int = Field(
+        default=0,
+        ge=0,
+        description="How many times the Critic forced an agent to regenerate.",
+    )
+    pipeline_status: str = Field(
+        default="success",
+        description="Overall pipeline status: 'success', 'partial_failure', or 'failure'.",
+    )

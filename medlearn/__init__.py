@@ -23,6 +23,7 @@ from medlearn.engagement_agent import EngagementAgent
 from medlearn.grounding import GroundingContext, load_grounding_context
 from medlearn.learning_path_curator import LearningPathCurator
 from medlearn.manager_insights_agent import ManagerInsightsAgent
+from medlearn.orchestrator import Orchestrator
 from medlearn.study_plan_generator import StudyPlanGenerator
 
 __all__ = [
@@ -42,4 +43,6 @@ __all__ = [
     "AssessmentAgent",
     "ManagerInsightsAgent",
     "CriticAgent",
+    # Orchestration
+    "Orchestrator",
 ]
