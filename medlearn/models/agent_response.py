@@ -434,3 +434,83 @@ class ManagerInsight(BaseModel):
         default_factory=list,
         description="Cross-team safety/ethics flags requiring leadership attention.",
     )
+
+
+# ============================================================================
+# Critic Agent schemas (V1.5 self-correction loop)
+# ============================================================================
+
+
+class Issue(BaseModel):
+    """A single problem the Critic Agent found in another agent's output."""
+
+    severity: str = Field(
+        ...,
+        description="EXACTLY one of: 'Blocker', 'Major', 'Minor'.",
+    )
+    field: str = Field(
+        ...,
+        description="Which field of the reviewed output has the issue (e.g. 'confidence', 'citations', 'rationale').",
+    )
+    problem: str = Field(
+        ...,
+        description="Concise description of what is wrong (1-2 sentences).",
+    )
+    suggested_fix: str = Field(
+        ...,
+        description="Concrete suggestion for how the original agent should fix this on regeneration.",
+    )
+
+
+class CriticVerdict(BaseModel):
+    """Structured output from the Critic Agent.
+
+    The Critic reviews another agent's output and returns a verdict
+    (APPROVED / NEEDS_REVISION / REJECTED) plus specific issues found
+    and a regeneration prompt if revision is needed.
+
+    This is MedLearn AI's V1.5 self-correction differentiator — judges
+    will see the system catching its own mistakes before delivering output.
+    """
+
+    reviewed_agent: str = Field(
+        ...,
+        description="Which agent's output is being reviewed. EXACTLY one of: "
+        "'LearningPathCurator', 'StudyPlanGenerator', 'EngagementAgent', "
+        "'AssessmentAgent', 'ManagerInsightsAgent'.",
+    )
+    verdict: str = Field(
+        ...,
+        description="EXACTLY one of: 'APPROVED', 'NEEDS_REVISION', 'REJECTED'. "
+        "APPROVED = output is good as-is. "
+        "NEEDS_REVISION = output has fixable issues; regenerate with feedback. "
+        "REJECTED = output is fundamentally wrong; do not deliver to user.",
+    )
+    issues: List[Issue] = Field(
+        default_factory=list,
+        description="Specific issues found, empty when verdict is APPROVED.",
+    )
+    overall_quality_score: float = Field(
+        ...,
+        ge=0.0,
+        le=1.0,
+        description="Overall quality score (0.0 = unusable, 1.0 = perfect). "
+        "APPROVED outputs should score >= 0.8. NEEDS_REVISION 0.4-0.79. "
+        "REJECTED < 0.4.",
+    )
+    rationale: str = Field(
+        ...,
+        description="2-4 sentence explanation of the verdict.",
+    )
+    regeneration_prompt: Optional[str] = Field(
+        default=None,
+        description="If verdict is NEEDS_REVISION, a concise instruction the "
+        "original agent should use when regenerating. Empty/null when APPROVED "
+        "or REJECTED.",
+    )
+    confidence: float = Field(
+        ...,
+        ge=0.0,
+        le=1.0,
+        description="The Critic's confidence in its own verdict.",
+    )
