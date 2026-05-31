@@ -340,3 +340,97 @@ class AssessmentResult(BaseModel):
         default_factory=list,
         description="Risks flagged (e.g., learner pushing for exam despite Not Ready status).",
     )
+
+
+# ============================================================================
+# Manager Insights Agent schemas
+# ============================================================================
+
+
+class TeamConcern(BaseModel):
+    """A single concern surfaced by the Manager Insights Agent."""
+
+    concern: str = Field(
+        ..., description="Short description of the concern, e.g. 'Multiple high-burnout staff on night shift'."
+    )
+    severity: str = Field(
+        ...,
+        description="Severity level. EXACTLY one of: 'Critical', 'High', 'Moderate', 'Low'.",
+    )
+    affected_count: int = Field(
+        ...,
+        ge=0,
+        description="Number of team members affected by this concern (aggregate only — no PII).",
+    )
+    recommended_intervention: str = Field(
+        ...,
+        description="Concrete next step the manager should take, e.g. 'Redistribute shifts', 'Schedule team review'.",
+    )
+
+
+class ManagerInsight(BaseModel):
+    """Structured output from the Manager Insights Agent.
+
+    A team-level dashboard with prioritized concerns, compliance highlights,
+    and burnout pattern analysis. Receives escalations from the Engagement
+    Agent and packages them with team data into actionable manager guidance.
+    """
+
+    team_id: str = Field(..., description="The team this insight is for, e.g. 'TEAM-ICU-NIGHT'.")
+    team_name: str = Field(..., description="Human-readable team name.")
+    team_size: int = Field(..., ge=1, description="Total team size.")
+
+    overall_health_status: str = Field(
+        ...,
+        description=(
+            "One-line summary of team health. EXACTLY one of: "
+            "'Healthy', 'Some concerns', 'Concerning', 'Critical — immediate action'."
+        ),
+    )
+    compliance_summary: str = Field(
+        ...,
+        description="1-2 sentence summary of regulatory compliance status.",
+    )
+    burnout_pattern: str = Field(
+        ...,
+        description="1-2 sentence summary of burnout distribution across the team.",
+    )
+    certification_pipeline: str = Field(
+        ...,
+        description="1-2 sentence summary of upcoming cert renewals and pass-rate trends.",
+    )
+
+    top_concerns: List[TeamConcern] = Field(
+        ...,
+        min_length=1,
+        max_length=5,
+        description="1-5 prioritized concerns, ordered most severe first.",
+    )
+
+    recommended_actions: List[str] = Field(
+        ...,
+        min_length=1,
+        description="Top 2-4 concrete actions the manager should take this week.",
+    )
+
+    rationale: str = Field(
+        ...,
+        description="2-4 sentence explanation of how the insights were derived from the data.",
+    )
+
+    confidence: float = Field(
+        ...,
+        ge=0.0,
+        le=1.0,
+        description="Agent's confidence in the analysis (0.0 to 1.0).",
+    )
+
+    citations: List[Citation] = Field(
+        default_factory=list,
+        description="Source documents referenced when forming insights.",
+    )
+
+    safety_flags: List[str] = Field(
+        default_factory=list,
+        description="Cross-team safety/ethics flags requiring leadership attention.",
+    )

@@ -14,9 +14,11 @@ from medlearn.models.agent_response import (
     Citation,
     CuratorRecommendation,
     EngagementDecision,
+    ManagerInsight,
     PracticeQuestion,
     StudyPlan,
     StudyWeek,
+    TeamConcern,
 )
 from medlearn.models.certification import Certification, CertificationCatalog
 from medlearn.models.enums import (
@@ -57,6 +59,8 @@ __all__ = [
     "EngagementDecision",
     "AssessmentResult",
     "PracticeQuestion",
+    "ManagerInsight",
+    "TeamConcern",
     # Enums
     "RoleCode",
     "DifficultyLevel",

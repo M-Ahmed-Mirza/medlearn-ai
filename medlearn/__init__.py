@@ -21,6 +21,7 @@ from medlearn.assessment_agent import AssessmentAgent
 from medlearn.engagement_agent import EngagementAgent
 from medlearn.grounding import GroundingContext, load_grounding_context
 from medlearn.learning_path_curator import LearningPathCurator
+from medlearn.manager_insights_agent import ManagerInsightsAgent
 from medlearn.study_plan_generator import StudyPlanGenerator
 
 __all__ = [
@@ -38,4 +39,5 @@ __all__ = [
     "StudyPlanGenerator",
     "EngagementAgent",
     "AssessmentAgent",
+    "ManagerInsightsAgent",
 ]
