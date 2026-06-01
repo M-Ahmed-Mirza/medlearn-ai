@@ -38,7 +38,8 @@ from medlearn.data_loader import (
     load_learners,
     load_work_signals,
 )
-from medlearn.grounding import GroundingContext, load_grounding_context
+from medlearn.grounding import GroundingContext
+from medlearn.grounding_router import load_grounding_context
 from medlearn.models import Certification, Learner, WorkSignal
 from medlearn.models.agent_response import StudyPlan
 

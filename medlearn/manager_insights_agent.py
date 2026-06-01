@@ -35,7 +35,8 @@ from typing import List, Optional
 from openai import AzureOpenAI
 
 from medlearn.data_loader import load_team_reports, load_work_signals
-from medlearn.grounding import GroundingContext, load_grounding_context
+from medlearn.grounding import GroundingContext
+from medlearn.grounding_router import load_grounding_context
 from medlearn.models import TeamReport, WorkSignal
 from medlearn.models.agent_response import ManagerInsight
 
