@@ -37,6 +37,7 @@ from medlearn.grounding import GroundingContext
 from medlearn.grounding_router import load_grounding_context
 from medlearn.models import Certification, Learner
 from medlearn.models.agent_response import AssessmentResult
+from medlearn.telemetry import traced
 
 
 # ---------- Prompt templates ---------------------------------------------------
@@ -187,6 +188,7 @@ class AssessmentAgent:
             azure_endpoint=aoai_endpoint,
         )
 
+    @traced('agent.assessment.assess')
     def assess(
         self,
         learner_id: str,

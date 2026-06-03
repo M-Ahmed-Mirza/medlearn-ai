@@ -42,6 +42,7 @@ from medlearn.grounding import GroundingContext
 from medlearn.grounding_router import load_grounding_context
 from medlearn.models import Certification, Learner, WorkSignal
 from medlearn.models.agent_response import StudyPlan
+from medlearn.telemetry import traced
 
 
 # ---------- Prompt templates ---------------------------------------------------
@@ -189,6 +190,7 @@ class StudyPlanGenerator:
             azure_endpoint=aoai_endpoint,
         )
 
+    @traced('agent.study_plan.generate')
     def generate(
         self,
         learner_id: str,

@@ -47,6 +47,7 @@ from medlearn.learning_path_curator import LearningPathCurator
 from medlearn.manager_insights_agent import ManagerInsightsAgent
 from medlearn.study_plan_generator import StudyPlanGenerator
 from medlearn.data_loader import load_learners
+from medlearn.telemetry import setup_telemetry, span, set_attributes
 from medlearn.models import (
     AssessmentResult,
     CriticReviewSummary,
@@ -148,7 +149,12 @@ class Orchestrator:
         Returns:
             (final_output, summary, regen_count)
         """
-        verdict = self.critic.review(agent_name, original_output)
+        with span("critic.review", {"medlearn.agent": agent_name}) as _rs:
+            verdict = self.critic.review(agent_name, original_output)
+            set_attributes(_rs, {
+                "medlearn.verdict": verdict.verdict,
+                "medlearn.quality_score": verdict.overall_quality_score,
+            })
         self._log(
             f"Critic on {agent_name}: {verdict.verdict} "
             f"(quality {verdict.overall_quality_score:.2f})"
@@ -159,17 +165,22 @@ class Orchestrator:
 
         if verdict.verdict == "NEEDS_REVISION" and regen_count < MAX_REGEN_ATTEMPTS:
             self._log(f"Regenerating {agent_name} based on critic feedback...")
-            try:
-                final_output = regenerate_fn()
-                regen_count += 1
-                # Re-review the regenerated output
-                verdict = self.critic.review(agent_name, final_output)
-                self._log(
-                    f"Critic re-review of {agent_name}: {verdict.verdict} "
-                    f"(quality {verdict.overall_quality_score:.2f})"
-                )
-            except Exception as exc:
-                self._log(f"Regeneration failed for {agent_name}: {exc}")
+            with span("critic.regeneration", {"medlearn.agent": agent_name}) as _gs:
+                try:
+                    final_output = regenerate_fn()
+                    regen_count += 1
+                    # Re-review the regenerated output
+                    verdict = self.critic.review(agent_name, final_output)
+                    set_attributes(_gs, {
+                        "medlearn.verdict_after_regen": verdict.verdict,
+                        "medlearn.quality_after_regen": verdict.overall_quality_score,
+                    })
+                    self._log(
+                        f"Critic re-review of {agent_name}: {verdict.verdict} "
+                        f"(quality {verdict.overall_quality_score:.2f})"
+                    )
+                except Exception as exc:
+                    self._log(f"Regeneration failed for {agent_name}: {exc}")
 
         return final_output, _summarize(verdict, regenerated=regen_count > 0), regen_count
 
@@ -193,22 +204,24 @@ class Orchestrator:
         Returns:
             LearnerJourneyReport with all agent outputs + critic summaries.
         """
+        setup_telemetry()
         self._log(f"=== Starting journey for {learner_id} ===")
         total_regens = 0
 
         # -------- Stage 1: Curator --------
         self._log("Stage 1: Learning Path Curator")
-        curator_output: CuratorRecommendation = self.curator.recommend(
-            learner_id=learner_id, target_cert_id=target_cert_id
-        )
-
-        curator_output, curator_review, n = self._review_with_regen(
-            "LearningPathCurator",
-            curator_output,
-            regenerate_fn=lambda: self.curator.recommend(
+        with span("stage.curator", {"medlearn.learner_id": learner_id}):
+            curator_output: CuratorRecommendation = self.curator.recommend(
                 learner_id=learner_id, target_cert_id=target_cert_id
-            ),
-        )
+            )
+
+            curator_output, curator_review, n = self._review_with_regen(
+                "LearningPathCurator",
+                curator_output,
+                regenerate_fn=lambda: self.curator.recommend(
+                    learner_id=learner_id, target_cert_id=target_cert_id
+                ),
+            )
         total_regens += n
 
         # The Curator chose the cert; use it for downstream agents
@@ -216,16 +229,17 @@ class Orchestrator:
 
         # -------- Stage 2: Study Plan --------
         self._log("Stage 2: Study Plan Generator")
-        plan_output: StudyPlan = self.study_plan.generate(
-            learner_id=learner_id, target_cert_id=chosen_cert_id
-        )
-        plan_output, plan_review, n = self._review_with_regen(
-            "StudyPlanGenerator",
-            plan_output,
-            regenerate_fn=lambda: self.study_plan.generate(
+        with span("stage.study_plan", {"medlearn.cert": chosen_cert_id}):
+            plan_output: StudyPlan = self.study_plan.generate(
                 learner_id=learner_id, target_cert_id=chosen_cert_id
-            ),
-        )
+            )
+            plan_output, plan_review, n = self._review_with_regen(
+                "StudyPlanGenerator",
+                plan_output,
+                regenerate_fn=lambda: self.study_plan.generate(
+                    learner_id=learner_id, target_cert_id=chosen_cert_id
+                ),
+            )
         total_regens += n
 
         # -------- Stage 3: Engagement --------
@@ -234,16 +248,17 @@ class Orchestrator:
             f"Study reminder for {chosen_cert_id}, Week 1 of {plan_output.total_weeks} "
             f"({plan_output.weeks[0].focus_topics[0] if plan_output.weeks else 'first module'})"
         )
-        engagement_output: EngagementDecision = self.engagement.decide(
-            learner_id=learner_id, occasion=engagement_occasion
-        )
-        engagement_output, engagement_review, n = self._review_with_regen(
-            "EngagementAgent",
-            engagement_output,
-            regenerate_fn=lambda: self.engagement.decide(
+        with span("stage.engagement", {"medlearn.learner_id": learner_id}):
+            engagement_output: EngagementDecision = self.engagement.decide(
                 learner_id=learner_id, occasion=engagement_occasion
-            ),
-        )
+            )
+            engagement_output, engagement_review, n = self._review_with_regen(
+                "EngagementAgent",
+                engagement_output,
+                regenerate_fn=lambda: self.engagement.decide(
+                    learner_id=learner_id, occasion=engagement_occasion
+                ),
+            )
         total_regens += n
 
         escalation_triggered = engagement_output.action == "REFUSE_AND_ESCALATE"
@@ -252,16 +267,17 @@ class Orchestrator:
 
         # -------- Stage 4: Assessment --------
         self._log("Stage 4: Assessment Agent")
-        assessment_output: AssessmentResult = self.assessment.assess(
-            learner_id=learner_id, target_cert_id=chosen_cert_id
-        )
-        assessment_output, assessment_review, n = self._review_with_regen(
-            "AssessmentAgent",
-            assessment_output,
-            regenerate_fn=lambda: self.assessment.assess(
+        with span("stage.assessment", {"medlearn.cert": chosen_cert_id}):
+            assessment_output: AssessmentResult = self.assessment.assess(
                 learner_id=learner_id, target_cert_id=chosen_cert_id
-            ),
-        )
+            )
+            assessment_output, assessment_review, n = self._review_with_regen(
+                "AssessmentAgent",
+                assessment_output,
+                regenerate_fn=lambda: self.assessment.assess(
+                    learner_id=learner_id, target_cert_id=chosen_cert_id
+                ),
+            )
         total_regens += n
 
         # -------- Stage 5: Manager Insights (only if escalation fired) --------
@@ -277,16 +293,17 @@ class Orchestrator:
                 f"{engagement_output.escalation_note}"
             )
 
-            manager_output = self.manager.analyze(
-                team_id=team_id, escalation_note=escalation_note
-            )
-            manager_output, manager_review, n = self._review_with_regen(
-                "ManagerInsightsAgent",
-                manager_output,
-                regenerate_fn=lambda: self.manager.analyze(
+            with span("stage.manager_insights", {"medlearn.team_id": team_id}):
+                manager_output = self.manager.analyze(
                     team_id=team_id, escalation_note=escalation_note
-                ),
-            )
+                )
+                manager_output, manager_review, n = self._review_with_regen(
+                    "ManagerInsightsAgent",
+                    manager_output,
+                    regenerate_fn=lambda: self.manager.analyze(
+                        team_id=team_id, escalation_note=escalation_note
+                    ),
+                )
             total_regens += n
         else:
             self._log("Stage 5: Manager Insights skipped (no escalation)")

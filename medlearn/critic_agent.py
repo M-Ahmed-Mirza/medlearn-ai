@@ -46,8 +46,7 @@ from medlearn.models.agent_response import (
     ManagerInsight,
     StudyPlan,
 )
-
-
+from medlearn.telemetry import traced
 # A type alias for any output the Critic can review
 ReviewableOutput = Union[
     CuratorRecommendation,
@@ -308,6 +307,7 @@ class CriticAgent:
             azure_endpoint=aoai_endpoint,
         )
 
+    @traced('agent.critic.review')
     def review(
         self,
         agent_name: str,

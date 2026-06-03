@@ -39,6 +39,7 @@ from medlearn.grounding import GroundingContext
 from medlearn.grounding_router import load_grounding_context
 from medlearn.models import TeamReport, WorkSignal
 from medlearn.models.agent_response import ManagerInsight
+from medlearn.telemetry import traced
 
 
 # ---------- Prompt templates ---------------------------------------------------
@@ -205,6 +206,7 @@ class ManagerInsightsAgent:
             azure_endpoint=aoai_endpoint,
         )
 
+    @traced('agent.manager_insights.analyze')
     def analyze(
         self,
         team_id: str,

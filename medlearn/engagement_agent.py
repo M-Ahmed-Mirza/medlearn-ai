@@ -39,6 +39,7 @@ from medlearn.grounding import GroundingContext
 from medlearn.grounding_router import load_grounding_context
 from medlearn.models import Learner, WorkSignal
 from medlearn.models.agent_response import EngagementDecision
+from medlearn.telemetry import traced
 
 
 # ---------- Prompt templates ---------------------------------------------------
@@ -193,6 +194,7 @@ class EngagementAgent:
             azure_endpoint=aoai_endpoint,
         )
 
+    @traced('agent.engagement.decide')
     def decide(
         self,
         learner_id: str,

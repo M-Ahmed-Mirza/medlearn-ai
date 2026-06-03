@@ -35,6 +35,7 @@ from medlearn.grounding import GroundingContext
 from medlearn.grounding_router import load_grounding_context
 from medlearn.models import Certification, Learner
 from medlearn.models.agent_response import CuratorRecommendation
+from medlearn.telemetry import traced
 
 
 # ---------- Prompt templates ---------------------------------------------------
@@ -160,6 +161,7 @@ class LearningPathCurator:
             api_key=api_key, api_version="2024-12-01-preview", azure_endpoint=aoai_endpoint
         )
 
+    @traced('agent.curator.recommend')
     def recommend(
         self,
         learner_id: str,
